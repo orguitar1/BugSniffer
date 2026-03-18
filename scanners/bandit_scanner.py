@@ -1,9 +1,18 @@
 import subprocess
 import json
+import logging
 from typing import List
 
 from backend.models.finding import Finding
 from scanners.base_scanner import BaseScanner
+
+logger = logging.getLogger(__name__)
+
+CONFIDENCE_MAP = {
+    "LOW": 0.3,
+    "MEDIUM": 0.6,
+    "HIGH": 0.9,
+}
 
 
 class BanditScanner(BaseScanner):
@@ -21,25 +30,34 @@ class BanditScanner(BaseScanner):
                 text=True
             )
 
-            if result.stdout:
-                data = json.loads(result.stdout)
+            if not result.stdout:
+                logger.warning("BanditScanner: no output from bandit subprocess")
+                return findings
 
-                for issue in data.get("results", []):
+            data = json.loads(result.stdout)
 
-                    finding = Finding(
-                        id=issue.get("test_id"),
-                        title=issue.get("issue_text"),
-                        description=issue.get("issue_text"),
-                        severity=issue.get("issue_severity").lower(),
-                        file=issue.get("filename"),
-                        line=issue.get("line_number"),
-                        scanner=self.name,
-                        confidence=0.9
-                    )
+            for issue in data.get("results", []):
+                confidence_raw = issue.get("issue_confidence", "MEDIUM").upper()
+                confidence = CONFIDENCE_MAP.get(confidence_raw, 0.6)
 
-                    findings.append(finding)
+                finding = Finding(
+                    id=issue.get("test_id"),
+                    title=issue.get("issue_text"),
+                    description=issue.get("issue_text"),
+                    severity=issue.get("issue_severity").lower(),
+                    file=issue.get("filename"),
+                    line=issue.get("line_number"),
+                    scanner=self.name,
+                    confidence=confidence
+                )
 
-        except Exception:
-            pass
+                findings.append(finding)
+
+        except json.JSONDecodeError as e:
+            logger.error(f"BanditScanner: failed to parse JSON output: {e}")
+        except FileNotFoundError:
+            logger.error("BanditScanner: bandit executable not found — is it installed?")
+        except Exception as e:
+            logger.exception(f"BanditScanner: unexpected error: {e}")
 
         return findings
