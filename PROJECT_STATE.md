@@ -8,7 +8,7 @@ Phase: Phase 2 – Scanner Integration
 ## Backend
 
 Framework: FastAPI (Python)
-Status: Core scan pipeline implemented and functional
+Status: Core scan pipeline implemented and functional with error handling and tests
 
 ---
 
@@ -23,31 +23,29 @@ Status: Not implemented
 
 - FastAPI application entry point with GET /health endpoint
 - POST /scan endpoint accepting repository URL, returning findings
+- Structured error handling in scan endpoint: RepoCloneError returns 400, generic exceptions return 500
 - Finding Pydantic model with SeverityLevel enum (low/medium/high/critical)
 - ScanRequest and ScanResponse models
 - Repository cloning service via subprocess (git clone to temp dir)
 - RepoCloneError custom exception with temp dir cleanup on failure
 - Scan orchestration service with try/finally temp dir cleanup
 - BaseScanner ABC with abstract scan() method
-- BanditScanner: runs bandit -r via subprocess, parses JSON output to Finding objects
+- BanditScanner: runs bandit -r via subprocess, parses JSON output, maps Bandit confidence levels (LOW/MEDIUM/HIGH), logs errors
 - Scanner registry pattern (get_scanners() returns list of active scanners)
-- Dependencies pinned in requirements.txt (fastapi==0.135.1, uvicorn==0.41.0, bandit==1.9.4)
+- Test suite: 4 passing tests (scan API 200/400 responses, scan service clone error and successful scan)
+- Dependencies pinned in requirements.txt (fastapi==0.135.1, uvicorn==0.41.0, bandit==1.9.4, pytest==8.3.5, httpx==0.28.1)
 
 ---
 
 ## Partially Implemented
 
-- RepoCloneError is raised but not converted to a structured HTTP error response (clients get raw 500)
-- BanditScanner silently swallows all exceptions (bare except Exception: pass)
-- Finding confidence hardcoded to 0.9 instead of mapping from Bandit's own confidence levels
 - ADR and plan doc files exist but are empty
-- PROJECT_MAP.md is current; PROJECT_STATE.md was outdated until this update
+- README.md is empty
 
 ---
 
 ## Not Implemented Yet
 
-- Tests (tests/ directory is empty, no pytest setup)
 - Frontend (all frontend directories are empty placeholders)
 - AI agent layer (agents/ directory is empty)
 - Database / scan persistence (scans are stateless request-response)
@@ -90,15 +88,16 @@ docs/
 ## Current System Capability
 
 - POST /scan with a repository URL clones the repo, runs Bandit against it, parses results into normalized Finding objects, cleans up the temp directory, and returns the findings as JSON
+- Clone failures return 400 with structured error detail; unexpected errors return 500
 - GET /health returns a status check
+- 4 unit tests validate the scan API and scan service
 
 ---
 
 ## Next Logical Steps
 
-1. Write tests for API endpoints, models, and services
-2. Convert RepoCloneError to structured HTTP error response
-3. Improve BanditScanner error handling (log instead of silently swallowing)
-4. Map Bandit confidence levels to Finding confidence field
-5. Add GET /scan/{id} endpoint with scan persistence
-6. Write content for empty ADR and plan files
+1. Add logging across services (repo_service, scan_service)
+2. Add GET /scan/{id} endpoint with scan persistence
+3. Write content for empty ADR and plan files
+4. Add additional scanners beyond Bandit
+5. Implement Docker setup
