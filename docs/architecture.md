@@ -58,11 +58,14 @@ Technology:
 
 FastAPI
 
-Example endpoints:
+Implemented endpoints:
 
 POST /scan
-GET /scan/{id}
 GET /health
+
+Planned endpoints:
+
+GET /scan/{id}
 
 The API layer must remain lightweight and should not contain business logic.
 
@@ -83,9 +86,13 @@ Responsibilities:
 
 The services layer contains the core application logic.
 
-Example services:
+Implemented services:
 
-scan_service.py
+scan_service.py — orchestrates clone, scanner execution, and cleanup
+repo_service.py — handles repository cloning to temp directories
+
+Planned services:
+
 analysis_service.py
 vulnerability_service.py
 
@@ -103,13 +110,17 @@ Responsibilities:
 • Parse scanner results
 • Return normalized vulnerability data
 
-Each scanner should follow a common interface so new scanners can be easily added.
+Each scanner follows the BaseScanner interface (ABC with abstract scan method) so new scanners can be easily added. A scanner registry (get_scanners()) provides dynamic scanner discovery.
 
-Example future scanners:
+Implemented scanners:
+
+bandit_scanner — Python static analysis via Bandit
+semgrep_scanner — multi-language static analysis via Semgrep
+
+Potential future scanners:
 
 smart_contract_scanner
 dependency_scanner
-static_analysis_scanner
 
 Scanners should not contain AI logic.
 
@@ -160,6 +171,12 @@ The architecture is designed so that:
 • AI analysis can be expanded
 
 This ensures BugSniffer can evolve into a broader security analysis platform.
+
+---
+
+# Logging
+
+Logging is configured at the application level in main.py via logging.basicConfig. All module-level loggers inherit this configuration. Logging is implemented across services (repo_service, scan_service) and scanners (bandit_scanner, semgrep_scanner).
 
 ---
 
