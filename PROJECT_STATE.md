@@ -1,6 +1,6 @@
 BugSniffer — Project State
 
-Last Updated: 2026-03-18
+Last Updated: 2026-03-19
 Phase: Phase 2 – Scanner Integration
 
 ---
@@ -8,7 +8,7 @@ Phase: Phase 2 – Scanner Integration
 ## Backend
 
 Framework: FastAPI (Python)
-Status: Core scan pipeline implemented and functional with error handling and tests
+Status: Core scan pipeline implemented with two scanners, logging, error handling, and tests
 
 ---
 
@@ -30,16 +30,18 @@ Status: Not implemented
 - RepoCloneError custom exception with temp dir cleanup on failure
 - Scan orchestration service with try/finally temp dir cleanup
 - BaseScanner ABC with abstract scan() method
-- BanditScanner: runs bandit -r via subprocess, parses JSON output, maps Bandit confidence levels (LOW/MEDIUM/HIGH), logs errors
-- Scanner registry pattern (get_scanners() returns list of active scanners)
+- BanditScanner: runs bandit -r via subprocess, parses JSON output, maps Bandit confidence levels (LOW=0.3, MEDIUM=0.6, HIGH=0.9), logs errors
+- SemgrepScanner: runs semgrep --config auto via subprocess, parses JSON output, maps severity (ERROR=high/0.9, WARNING=medium/0.6, INFO=low/0.3), logs errors
+- Scanner registry pattern (get_scanners() returns [BanditScanner, SemgrepScanner])
+- Logging: root logger configured in main.py (INFO level), module-level loggers in repo_service, scan_service, bandit_scanner, semgrep_scanner
 - Test suite: 4 passing tests (scan API 200/400 responses, scan service clone error and successful scan)
-- Dependencies pinned in requirements.txt (fastapi==0.135.1, uvicorn==0.41.0, bandit==1.9.4, pytest==8.3.5, httpx==0.28.1)
+- Dependencies in requirements.txt (fastapi==0.135.1, uvicorn==0.41.0, bandit==1.9.4, semgrep, pytest==8.3.5, httpx==0.28.1)
 
 ---
 
 ## Partially Implemented
 
-- ADR and plan doc files exist but are empty
+- Plan doc files exist but are empty (api_design.md, finding_schema.md, scanner_architecture.md)
 - README.md is empty
 
 ---
@@ -53,7 +55,6 @@ Status: Not implemented
 - Authentication / authorization
 - Docker setup (docker-compose.yml is empty, no Dockerfile)
 - Async scan processing / job queue
-- Additional scanners beyond Bandit
 
 ---
 
@@ -69,11 +70,11 @@ Status: Not implemented
 ## Existing Documentation
 
 docs/
-- architecture.md — 5-layer architecture overview and data flow
+- architecture.md — 5-layer architecture overview, data flow, logging section, implemented vs planned components
 - roadmap.md — 5-phase development plan
 - development_workflow.md — workflow guide with tools, AI roles, session procedures
 - plans/ — api_design.md, finding_schema.md, scanner_architecture.md (all empty)
-- adr/ — 001-use-fastapi.md, 002-finding-schema.md, 003-scanner-plugin-interface.md (all empty)
+- adr/ — 001-use-fastapi.md, 002-finding-schema.md, 003-scanner-plugin-interface.md (all written with full content)
 
 ---
 
@@ -87,17 +88,18 @@ docs/
 
 ## Current System Capability
 
-- POST /scan with a repository URL clones the repo, runs Bandit against it, parses results into normalized Finding objects, cleans up the temp directory, and returns the findings as JSON
+- POST /scan with a repository URL clones the repo, runs Bandit and Semgrep against it, parses results into normalized Finding objects, cleans up the temp directory, and returns the findings as JSON
 - Clone failures return 400 with structured error detail; unexpected errors return 500
 - GET /health returns a status check
+- Logging captures clone operations, scanner execution, finding counts, errors with stack traces, and temp dir cleanup
 - 4 unit tests validate the scan API and scan service
 
 ---
 
 ## Next Logical Steps
 
-1. Add logging across services (repo_service, scan_service)
-2. Add GET /scan/{id} endpoint with scan persistence
-3. Write content for empty ADR and plan files
-4. Add additional scanners beyond Bandit
-5. Implement Docker setup
+1. Add GET /scan/{id} endpoint with scan persistence
+2. Write content for empty plan files
+3. Implement Docker setup
+4. Add tests for SemgrepScanner
+5. Write README content
