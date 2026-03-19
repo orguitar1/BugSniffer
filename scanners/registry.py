@@ -2,6 +2,7 @@ from typing import List
 
 from scanners.base_scanner import BaseScanner
 from scanners.bandit_scanner import BanditScanner
+from scanners.semgrep_scanner import SemgrepScanner
 
 
 def get_scanners() -> List[BaseScanner]:
@@ -11,4 +12,5 @@ def get_scanners() -> List[BaseScanner]:
 
     return [
         BanditScanner(),
+        SemgrepScanner(),
     ]
