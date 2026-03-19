@@ -1,5 +1,12 @@
+import logging
+
 from fastapi import FastAPI
 from backend.api.routes.scan import router as scan_router
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s — %(message)s"
+)
 
 app = FastAPI()
 

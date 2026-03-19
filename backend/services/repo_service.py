@@ -1,6 +1,9 @@
 import tempfile
 import subprocess
 import shutil
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class RepoCloneError(Exception):
@@ -11,6 +14,8 @@ def clone_repository(repository_url: str) -> str:
     temp_dir = tempfile.mkdtemp()
 
     try:
+        logger.info(f"Cloning repository: {repository_url}")
+
         subprocess.run(
             ["git", "clone", repository_url, temp_dir],
             check=True,
@@ -18,6 +23,7 @@ def clone_repository(repository_url: str) -> str:
             text=True
         )
 
+        logger.info(f"Successfully cloned {repository_url} to {temp_dir}")
         return temp_dir
 
     except subprocess.CalledProcessError as e:
@@ -25,6 +31,7 @@ def clone_repository(repository_url: str) -> str:
 
         error_msg = e.stderr.strip() or "Unknown git error"
 
+        logger.error(f"Failed to clone {repository_url}: {error_msg}")
         raise RepoCloneError(
             f"Git clone failed for {repository_url}: {error_msg}"
         )
