@@ -1,6 +1,6 @@
 BugSniffer — Project State
 
-Last Updated: 2026-03-19
+Last Updated: 2026-03-20
 Phase: Phase 2 – Scanner Integration
 
 ---
@@ -8,7 +8,7 @@ Phase: Phase 2 – Scanner Integration
 ## Backend
 
 Framework: FastAPI (Python)
-Status: Core scan pipeline implemented with two scanners, logging, error handling, and tests
+Status: Core scan pipeline implemented with two scanners, logging, error handling, tests, and Docker setup
 
 ---
 
@@ -34,14 +34,16 @@ Status: Not implemented
 - SemgrepScanner: runs semgrep --config auto via subprocess, parses JSON output, maps severity (ERROR=high/0.9, WARNING=medium/0.6, INFO=low/0.3), logs errors
 - Scanner registry pattern (get_scanners() returns [BanditScanner, SemgrepScanner])
 - Logging: root logger configured in main.py (INFO level), module-level loggers in repo_service, scan_service, bandit_scanner, semgrep_scanner
-- Test suite: 4 passing tests (scan API 200/400 responses, scan service clone error and successful scan)
+- Test suite: 8 passing tests (scan API 200/400, scan service clone error and successful scan, SemgrepScanner success/empty stdout/invalid JSON/missing executable)
+- Dockerfile (python:3.11-slim, copies backend/ and scanners/, exposes port 8000)
+- docker-compose.yml (single api service, port 8000, volume mount for dev, PYTHONUNBUFFERED=1)
 - Dependencies in requirements.txt (fastapi==0.135.1, uvicorn==0.41.0, bandit==1.9.4, semgrep, pytest==8.3.5, httpx==0.28.1)
 
 ---
 
 ## Partially Implemented
 
-- Plan doc files exist but are empty (api_design.md, finding_schema.md, scanner_architecture.md)
+- Plan doc files: api_design.md has content (scan persistence + GET /scan/{id} design); finding_schema.md and scanner_architecture.md are empty
 - README.md is empty
 
 ---
@@ -51,9 +53,8 @@ Status: Not implemented
 - Frontend (all frontend directories are empty placeholders)
 - AI agent layer (agents/ directory is empty)
 - Database / scan persistence (scans are stateless request-response)
-- GET /scan/{id} endpoint
+- GET /scan/{id} endpoint (designed in docs/plans/api_design.md, not built)
 - Authentication / authorization
-- Docker setup (docker-compose.yml is empty, no Dockerfile)
 - Async scan processing / job queue
 
 ---
@@ -73,8 +74,9 @@ docs/
 - architecture.md — 5-layer architecture overview, data flow, logging section, implemented vs planned components
 - roadmap.md — 5-phase development plan
 - development_workflow.md — workflow guide with tools, AI roles, session procedures
-- plans/ — api_design.md, finding_schema.md, scanner_architecture.md (all empty)
+- plans/ — api_design.md (scan persistence and GET /scan/{id} design), finding_schema.md and scanner_architecture.md (empty)
 - adr/ — 001-use-fastapi.md, 002-finding-schema.md, 003-scanner-plugin-interface.md (all written with full content)
+- backlog.md — tracked housekeeping items (Pydantic ConfigDict migration, dev dependency split)
 
 ---
 
@@ -92,14 +94,14 @@ docs/
 - Clone failures return 400 with structured error detail; unexpected errors return 500
 - GET /health returns a status check
 - Logging captures clone operations, scanner execution, finding counts, errors with stack traces, and temp dir cleanup
-- 4 unit tests validate the scan API and scan service
+- 8 unit tests validate the scan API, scan service, and SemgrepScanner
+- Docker build and run verified — container serves the API on port 8000
 
 ---
 
 ## Next Logical Steps
 
-1. Add GET /scan/{id} endpoint with scan persistence
-2. Write content for empty plan files
-3. Implement Docker setup
-4. Add tests for SemgrepScanner
-5. Write README content
+1. Implement scan persistence with SQLite + SQLAlchemy (per docs/plans/api_design.md)
+2. Add GET /scan/{id} endpoint
+3. Write content for empty plan files (finding_schema.md, scanner_architecture.md)
+4. Write README content
