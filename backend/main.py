@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI
 from backend.api.routes.scan import router as scan_router
+from backend.db.init_db import init_db
 
 logging.basicConfig(
     level=logging.INFO,
@@ -9,6 +10,8 @@ logging.basicConfig(
 )
 
 app = FastAPI()
+
+init_db()
 
 @app.get("/health")
 def health_check():

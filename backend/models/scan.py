@@ -8,4 +8,5 @@ class ScanRequest(BaseModel):
 
 
 class ScanResponse(BaseModel):
+    scan_id: str
     findings: List[Finding]
