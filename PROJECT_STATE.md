@@ -1,6 +1,6 @@
-BugSniffer — Project State
+# BugSniffer — Project State
 
-Last Updated: 2026-03-23
+Last Updated: 2026-03-30
 Phase: Phase 2 – Scanner Integration (scan persistence complete)
 
 ---
@@ -79,10 +79,13 @@ Status: Not implemented
 docs/
 - architecture.md — 5-layer architecture overview, data flow, logging section, implemented vs planned components
 - roadmap.md — 5-phase development plan
-- development_workflow.md — workflow guide with tools, AI roles, session procedures
+- development_workflow.md — three-agent workflow guide with tools, AI roles, session procedures
+- COWORK_PROJECT_INSTRUCTIONS.md — Cowork project instructions (loaded into Cowork settings)
 - plans/ — api_design.md (scan persistence and GET /scan/{id} design), finding_schema.md and scanner_architecture.md (empty)
 - adr/ — 001-use-fastapi.md, 002-finding-schema.md, 003-scanner-plugin-interface.md (all written with full content)
 - backlog.md — tracked housekeeping items (Pydantic ConfigDict migration, dev dependency split)
+- prompts/ — session-start-prompt.md, cowork-summary-prompt.md, desktop-claude-summary-prompt.md, vscode-claude-summary-prompt.md (all with content)
+- summaries/ — cowork-summary.md (updated 2026-03-30), desktop-claude-summary.md (updated 2026-03-30), vscode-claude-summary.md (updated 2026-03-30)
 
 ---
 
@@ -110,5 +113,7 @@ docs/
 ## Next Logical Steps
 
 1. Add GET /scan/{id} endpoint (per docs/plans/api_design.md)
-2. Write content for empty plan files (finding_schema.md, scanner_architecture.md)
+2. Add BanditScanner tests (SemgrepScanner has 4 tests, BanditScanner has none)
 3. Write README content
+4. Write content for empty plan files (finding_schema.md, scanner_architecture.md)
+5. Begin Phase 3 — AI Analysis Layer design
