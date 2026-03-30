@@ -135,10 +135,11 @@ IMPORTANT: When reading these files at session start, read them one at a time se
 
 ### Session End
 
-1. Push all commits to GitHub.
-2. VS Code Claude Code updates PROJECT_STATE.md, PROJECT_MAP.md, and docs/summaries/vscode-claude-summary.md.
-3. Desktop Claude Code reads VS Code's summary, reviews changes, and updates docs/summaries/desktop-claude-summary.md.
-4. Claude Cowork reads both summaries, checks the codebase directly, and updates docs/summaries/cowork-summary.md. Flags any discrepancies between the three summaries.
+1. VS Code Claude Code updates PROJECT_STATE.md, PROJECT_MAP.md, and docs/summaries/vscode-claude-summary.md.
+2. Desktop Claude Code reads VS Code's summary, reviews changes, and updates docs/summaries/desktop-claude-summary.md.
+3. Claude Cowork reads both summaries, checks the codebase directly, and updates docs/summaries/cowork-summary.md. Flags any discrepancies between the three summaries.
+4. Commit all summary and state file updates.
+5. Push everything to GitHub (development commits + summary commits all go up together).
 
 This triple-summary approach ensures no single agent's perspective becomes the unchecked source of truth.
 

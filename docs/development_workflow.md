@@ -101,17 +101,18 @@ IMPLEMENTATION PHASE (Repeat for Each Step)
 
 SESSION END
 
-1. Push all commits to GitHub.
-2. VS Code Claude Code updates:
+1. VS Code Claude Code updates:
    - PROJECT_STATE.md
    - PROJECT_MAP.md
    - docs/summaries/vscode-claude-summary.md
    - Verifies all updates are accurate.
-3. Desktop Claude Code reads VS Code Claude Code's summary, reviews the changes, and updates:
+2. Desktop Claude Code reads VS Code Claude Code's summary, reviews the changes, and updates:
    - docs/summaries/desktop-claude-summary.md
-4. Claude Cowork reads both summaries, checks the codebase directly, and updates:
+3. Claude Cowork reads both summaries, checks the codebase directly, and updates:
    - docs/summaries/cowork-summary.md
    - Flags any discrepancies between the three summaries.
+4. Commit all summary and state file updates.
+5. Push everything to GitHub (development commits + summary commits all go up together).
 
 This triple-summary approach ensures no single agent's perspective becomes the unchecked source of truth.
 
