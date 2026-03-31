@@ -5,12 +5,29 @@ import logging
 from sqlalchemy.orm import Session
 
 from backend.models.finding import Finding
-from backend.models.scan import ScanResponse
+from backend.models.scan import ScanResponse, ScanDetailResponse
 from backend.models.scan_record import ScanRecord
 from backend.services.repo_service import clone_repository, RepoCloneError
 from scanners.registry import get_scanners
 
 logger = logging.getLogger(__name__)
+
+
+def get_scan_by_id(scan_id: str, db: Session) -> ScanDetailResponse | None:
+    record = db.query(ScanRecord).filter(ScanRecord.id == scan_id).first()
+    if record is None:
+        return None
+
+    findings_data = record.findings if record.findings is not None else []
+    findings = [Finding(**f) for f in findings_data]
+
+    return ScanDetailResponse(
+        scan_id=record.id,
+        repository_url=record.repository_url,
+        status=record.status,
+        findings=findings,
+        created_at=record.created_at,
+    )
 
 
 def scan_repository(repository_url: str, db: Session) -> ScanResponse:
