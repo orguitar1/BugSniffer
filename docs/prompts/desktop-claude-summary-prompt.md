@@ -28,7 +28,7 @@ Read `docs/summaries/desktop-claude-summary.md` first, then update it with the f
 
 5. **PROJECT_MAP.md Verification** — Does it match the actual repository structure? Note any issues. If it's accurate, say so.
 
-6. **Code Quality Observations** — Any concerns about code quality, patterns, potential bugs, or architectural drift you noticed while reviewing.
+6. **Code Quality Review Findings** — Summarize the findings from your structured code quality reviews this session (the reviews you performed using the checklist in `docs/prompts/desktop-claude-review-prompt.md`). For each implementation step reviewed, note: what you checked, any issues raised (bugs, edge cases, style inconsistencies, test gaps, security/deprecation risks), how they were resolved, and any that were accepted or deferred. If no code quality reviews were performed this session, state why.
 
 7. **Notes for Next Session** — Anything the team should be aware of going into the next session.
 

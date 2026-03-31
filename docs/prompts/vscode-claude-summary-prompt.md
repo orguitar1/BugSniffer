@@ -42,9 +42,11 @@ Read the file first, then update it following this exact structure:
 
 12. **Overall Project State** — Short summary of how far along the project is, whether it is mostly documentation or implementation, and what the next logical development steps should be.
 
-13. **Key Entry Points** — Identify important files that act as entry points or central components. If none exist yet, explicitly state that.
+13. **Technical Debt Introduced** — List any technical debt flagged during implementation defense this session. For each item, note: what it is, why it was deferred rather than fixed, and whether it was added to `docs/backlog.md`. If no tech debt was introduced, state that explicitly.
 
-14. **Commit History** — Include the full commit log.
+14. **Key Entry Points** — Identify important files that act as entry points or central components. If none exist yet, explicitly state that.
+
+15. **Commit History** — Include the full commit log.
 
 **Important:**
 - Write the summary directly into `docs/summaries/vscode-claude-summary.md`. Do not output it to the chat.

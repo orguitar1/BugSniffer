@@ -87,17 +87,42 @@ PLANNING PHASE
 1. User and Claude Cowork discuss the current project state and decide the next 3 development steps — simple, clear, and effective.
 2. User shares the proposed steps with Desktop Claude Code and VS Code Claude Code for feedback.
 3. All three agents discuss and agree on the plan.
-4. Claude Cowork provides tailored implementation prompts for VS Code Claude Code.
+4. Before generating implementation prompts, Claude Cowork leads a failure-first review of each step:
+   - What assumptions are we making? Are any of them fragile?
+   - What are the most likely failure modes?
+   - What edge cases could surface during implementation?
+   - Are there dependencies between steps that could cascade if one fails?
+   This step is especially important before features that introduce new integration points (external APIs, LLM calls, async processing, new data stores).
+5. Claude Cowork provides tailored implementation prompts for VS Code Claude Code. The prompts should reflect any failure modes or edge cases identified in step 4.
 
 IMPLEMENTATION PHASE (Repeat for Each Step)
 
 1. VS Code Claude Code implements the step.
-2. After implementation, all three agents review the changes:
-   - Claude Cowork reviews architecture and correctness (read-only).
-   - Desktop Claude Code reviews code quality (read-only).
-   - VS Code Claude Code reviews its own changes.
-3. Once all agents are satisfied, user commits the changes.
-4. Move to the next step.
+2. After implementation, all three agents review the changes using structured checklists:
+
+   Claude Cowork (Architectural Review — read-only):
+   - Does the implementation match the design document?
+   - Are there any deviations from agreed architecture or data flow?
+   - Do new modules, endpoints, or models fit the existing separation of concerns?
+   - Were the failure modes identified in planning actually handled?
+   - Are there any new architectural assumptions that weren't discussed?
+
+   Desktop Claude Code (Code Quality Review — read-only):
+   - Are there concrete bugs, logic errors, or unhandled exceptions?
+   - Are edge cases covered (empty inputs, None values, error states)?
+   - Is the code consistent with existing patterns and style conventions?
+   - Are tests meaningful — do they test behavior, not just happy paths?
+   - Are there any security concerns, dependency issues, or deprecation risks?
+
+   VS Code Claude Code (Implementation Defense):
+   - Explain any trade-offs or deviations from the design.
+   - Identify anything left intentionally unhandled and justify why.
+   - Confirm all new code paths have test coverage.
+   - Flag any technical debt introduced and whether it belongs on the backlog.
+
+3. Reviewers must raise specific, concrete issues — not general "looks good" approvals. If no issues are found, each reviewer states what they checked and why they're confident.
+4. Once all agents are satisfied, user commits the changes.
+5. Move to the next step.
 
 SESSION END
 
@@ -117,7 +142,24 @@ SESSION END
 This triple-summary approach ensures no single agent's perspective becomes the unchecked source of truth.
 
 
-5. Design-First Development
+5. Fresh Agent Audits
+
+Periodically, a completely fresh agent session should audit the codebase with no prior context — no summaries, no conversation history. The agent receives only the raw codebase and PROJECT_MAP.md, then independently evaluates:
+
+- Does the architecture make sense? Are there structural problems?
+- Where are the weak points — code that's fragile, unclear, or likely to break?
+- Are there refactoring opportunities the current agents have normalized?
+- Are there hidden bug risks that tests don't cover?
+
+When to trigger a Fresh Audit:
+- Before starting a new development phase (e.g., before Phase 3 begins).
+- When a session feels too smooth — all agents agreeing without friction is a warning sign, not a success signal.
+- After any session where a significant bug was discovered late.
+
+The audit findings are shared with all three agents and discussed before the next planning phase. Findings that reveal real issues should be added to docs/backlog.md or addressed in the next session's steps.
+
+
+6. Design-First Development
 
 Complex features should be designed before implementation.
 
@@ -132,7 +174,7 @@ Design documents are stored in docs/plans/ and define:
 Implementation begins only after the design is reviewed and agreed upon by all three agents.
 
 
-6. Testing Strategy
+7. Testing Strategy
 
 All features must be tested locally before committing.
 
@@ -142,14 +184,14 @@ Automated Tests: Written using pytest, stored in tests/.
 Early tests focus on verifying that API endpoints respond correctly and services execute without errors.
 
 
-7. Git Workflow
+8. Git Workflow
 
 Commit after each completed step during a session. Push all commits at the end of the session.
 
 Avoid using git add . — always add specific files to reduce the risk of committing sensitive files.
 
 
-8. Project Memory Structure
+9. Project Memory Structure
 
 BugSniffer maintains three independent sources of project memory.
 
@@ -160,11 +202,13 @@ Project State & Continuity: PROJECT_STATE.md, PROJECT_MAP.md, and docs/summaries
 This guarantees the project can always be resumed from any point.
 
 
-9. Engineering Principles
+10. Engineering Principles
 
 - Modular architecture
 - Separation of concerns
 - Design-first development
+- Failure-first planning — identify what can go wrong before writing code
 - Documented architectural decisions
 - Incremental feature development
-- Triple-agent review before commits
+- Structured review with concrete checklists — no vague approvals
+- Periodic fresh audits to counter convergent blind spots

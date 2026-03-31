@@ -34,18 +34,20 @@ Read `docs/summaries/cowork-summary.md` first, then update it with the following
 
 4. **Architecture Decisions** — Any architectural decisions made or discussed. Reference relevant ADRs or design plans if applicable.
 
-5. **Cross-Agent Verification** — Summary of your review of the other two agents' summaries:
+5. **Architecture Review Findings** — Summarize the findings from your structured architecture alignment reviews this session (the reviews you performed using the checklist in `docs/prompts/cowork-architecture-review-prompt.md`). For each implementation step reviewed, note: what you checked, any issues raised, how they were resolved, and any that were accepted or deferred. If no architecture reviews were performed this session, state why.
+
+6. **Cross-Agent Verification** — Summary of your review of the other two agents' summaries:
    - Is VS Code Claude Code's summary accurate? Note any discrepancies.
    - Is Desktop Claude Code's review accurate? Note any discrepancies.
    - Is `PROJECT_STATE.md` accurate?
    - Is `PROJECT_MAP.md` accurate?
    - If everything checks out, say so explicitly.
 
-6. **Current Project State** — Brief high-level summary of where the project stands right now.
+7. **Current Project State** — Brief high-level summary of where the project stands right now.
 
-7. **Next Steps** — The planned next development steps for the following session.
+8. **Next Steps** — The planned next development steps for the following session.
 
-8. **Notes and Concerns** — Any architectural concerns, technical debt, risks, or observations worth carrying forward.
+9. **Notes and Concerns** — Any architectural concerns, technical debt, risks, or observations worth carrying forward.
 
 **Important:**
 - Write directly into `docs/summaries/cowork-summary.md`. Do not just output it to the chat.

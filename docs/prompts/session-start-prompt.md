@@ -16,6 +16,9 @@ After reading all five files, confirm the following:
 
 1. **Context** — Briefly summarize your understanding of where the project stands right now and what was accomplished last session.
 2. **Accuracy** — Flag anything that looks inconsistent between the summaries, or between the summaries and the project state/map files.
-3. **Ready** — Confirm you are ready to begin work.
+3. **Carry-Forward Items** — Note any unresolved issues, deferred tech debt, or review findings from last session that should inform today's planning.
+4. **Ready** — Confirm you are ready to begin work.
+
+Reminder: The planning phase now includes a failure-first review step before implementation prompts are generated. Come prepared to identify assumptions, failure modes, and edge cases for each proposed step.
 
 Do not start any development work yet. Just read, verify, and confirm.

@@ -121,17 +121,19 @@ IMPORTANT: When reading these files at session start, read them one at a time se
 1. User and Claude Cowork discuss the current project state and decide the next 3 development steps — simple, clear, and effective.
 2. User shares the proposed steps with Desktop Claude Code and VS Code Claude Code for feedback.
 3. All three agents discuss and agree on the plan.
-4. Claude Cowork provides tailored implementation prompts for VS Code Claude Code.
+4. Before generating implementation prompts, Claude Cowork leads a failure-first review of each step: identify assumptions, failure modes, edge cases, and inter-step dependencies. This is especially important before features involving new integration points.
+5. Claude Cowork provides tailored implementation prompts for VS Code Claude Code, reflecting any failure modes or edge cases identified in step 4.
 
 ### Implementation Phase (Repeat for Each Step)
 
 1. VS Code Claude Code implements the step.
-2. After implementation, all three agents review the changes:
-   - Claude Cowork reviews architecture and correctness (read-only).
-   - Desktop Claude Code reviews code quality (read-only).
-   - VS Code Claude Code reviews its own changes.
-3. Once all agents are satisfied, user commits the changes.
-4. Move to the next step.
+2. After implementation, all three agents review using structured checklists:
+   - Claude Cowork (Architectural Review): design-doc alignment, separation of concerns, failure-mode handling, undiscussed assumptions.
+   - Desktop Claude Code (Code Quality Review): concrete bugs, edge cases, style consistency, test quality, security/deprecation risks.
+   - VS Code Claude Code (Implementation Defense): explain trade-offs, justify anything left unhandled, confirm test coverage, flag new tech debt.
+3. Reviewers must raise specific issues — not general approvals. If no issues found, state what was checked and why.
+4. Once all agents are satisfied, user commits the changes.
+5. Move to the next step.
 
 ### Session End
 
@@ -169,7 +171,9 @@ Design documents are stored in docs/plans/ and must be reviewed and agreed upon 
 - Modular architecture
 - Separation of concerns (API → requests, services → logic, scanners → detection, agents → AI reasoning)
 - Design-first development
+- Failure-first planning — identify what can go wrong before writing code
 - Documented architectural decisions
 - Incremental feature development
-- Triple-agent review before commits
+- Structured review with concrete checklists — no vague approvals
+- Periodic fresh audits to counter convergent blind spots
 - Scalable design from the start
