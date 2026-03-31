@@ -1,6 +1,6 @@
 # BugSniffer — Project Map
 
-Last verified: 2026-03-30
+Last verified: 2026-03-31
 
 ---
 
@@ -11,11 +11,11 @@ BugSniffer/
 ├── .env.example                  # Empty — no env vars documented yet
 ├── .gitignore                    # Ignores .env, __pycache__/, node_modules/, *.pyc, .vscode/, bugsniffer.db
 ├── .vscode/
-│   └── settings.json             # VS Code Python environment settings (tracked in repo, 132 bytes)
+│   └── settings.json             # VS Code Python environment settings (tracked in repo)
 ├── Dockerfile                    # python:3.11-slim, copies backend/ and scanners/, exposes port 8000, runs uvicorn
 ├── PROJECT_MAP.md                # This file — structural map of the repository
-├── PROJECT_STATE.md              # Current project state snapshot (last updated 2026-03-30)
-├── README.md                     # Empty
+├── PROJECT_STATE.md              # Current project state snapshot (last updated 2026-03-31)
+├── README.md                     # Project description, Docker and local quick start, API endpoint table with curl example, test instructions
 ├── docker-compose.yml            # Single api service, port 8000, volume mount for dev, PYTHONUNBUFFERED=1
 ├── requirements.txt              # fastapi==0.135.1, uvicorn==0.41.0, bandit==1.9.4, semgrep, pytest==8.3.5, httpx==0.28.1, sqlalchemy==2.0.36
 │
@@ -24,7 +24,7 @@ BugSniffer/
 │   ├── api/
 │   │   ├── .gitkeep              # Placeholder
 │   │   └── routes/
-│   │       └── scan.py           # POST /scan endpoint — injects db session via Depends(get_db), delegates to scan_repository(), handles RepoCloneError (400) and generic errors (500)
+│   │       └── scan.py           # POST /scan — injects db session via Depends(get_db), delegates to scan_repository(), handles RepoCloneError (400) and generic errors (500). GET /scan/{scan_id} — delegates to get_scan_by_id(), returns 404 if not found, response_model=ScanDetailResponse
 │   ├── db/
 │   │   ├── __init__.py           # Empty — makes backend/db a Python package
 │   │   ├── base.py               # Base(DeclarativeBase) — SQLAlchemy declarative base, isolated to prevent circular imports
@@ -33,12 +33,12 @@ BugSniffer/
 │   ├── models/
 │   │   ├── .gitkeep              # Placeholder
 │   │   ├── finding.py            # Finding Pydantic model with SeverityLevel enum (low/medium/high/critical), fields: id, title, description, severity, file, line, scanner, confidence
-│   │   ├── scan.py               # ScanRequest (repository_url str) and ScanResponse (scan_id str, findings List[Finding]) Pydantic models
+│   │   ├── scan.py               # ScanRequest (repository_url), ScanResponse (scan_id, List[Finding]), ScanDetailResponse (scan_id, repository_url, status, List[Finding], created_at datetime)
 │   │   └── scan_record.py        # ScanRecord SQLAlchemy ORM model — scan_records table (id UUID primary key, repository_url, status pending/complete/failed, findings JSON, created_at DateTime UTC)
 │   └── services/
 │       ├── .gitkeep              # Placeholder
 │       ├── repo_service.py       # clone_repository(url) — git clones to temp dir via subprocess, returns path; RepoCloneError exception with temp dir cleanup on failure; logs clone operations
-│       └── scan_service.py       # scan_repository(url, db) — creates pending ScanRecord, clones repo, runs all scanners from registry, updates status to complete/failed, commits to db, cleans up temp dir via shutil.rmtree, returns ScanResponse
+│       └── scan_service.py       # scan_repository(url, db) — creates pending ScanRecord, clones repo, runs all scanners from registry, updates status to complete/failed, commits to db, cleans up temp dir, returns ScanResponse. get_scan_by_id(scan_id, db) — queries ScanRecord by id, deserializes findings JSON into Finding objects, coerces None to [], returns ScanDetailResponse or None
 │
 ├── scanners/
 │   ├── .gitkeep                  # Placeholder
@@ -62,6 +62,8 @@ BugSniffer/
 │   ├── test_scan_api.py          # 2 tests — valid repo POST /scan returns 200 with scan_id and findings; invalid repo returns 400 with error detail
 │   ├── test_scan_service.py      # 2 tests — scan_repository handles clone error gracefully; successful scan returns ScanResponse with findings
 │   ├── test_scan_persistence.py  # 2 tests — successful scan writes ScanRecord with status=complete and findings; failed scan writes ScanRecord with status=failed
+│   ├── test_get_scan.py          # 4 tests — GET /scan/{id} returns 200 with all fields for complete scan; 404 for nonexistent ID; failed status returns findings=[]; pending status returns findings=[]
+│   ├── test_bandit_scanner.py    # 5 tests — successful scan returns Finding objects with correct field mapping; empty stdout returns []; invalid JSON returns []; missing executable returns []; confidence mapping validates LOW=0.3, MEDIUM=0.6, HIGH=0.9, UNDEFINED=0.6 default
 │   └── test_semgrep_scanner.py   # 4 tests — successful scan returns Finding objects; empty stdout returns []; invalid JSON returns []; missing executable returns []
 │
 └── docs/
@@ -76,28 +78,29 @@ BugSniffer/
     │   ├── 002-finding-schema.md # ADR: Use a single normalized Finding schema across all scanners — field definitions, severity enum
     │   └── 003-scanner-plugin-interface.md  # ADR: Use ABC and registry pattern for scanner plugin discovery — BaseScanner interface, get_scanners() registry
     ├── plans/
-    │   ├── api_design.md         # Design doc: scan persistence via SQLite/SQLAlchemy + GET /scan/{id} endpoint — response shapes, persistence model, status transitions, out of scope items
+    │   ├── api_design.md         # Design doc: scan persistence via SQLite/SQLAlchemy + GET /scan/{id} endpoint (now fully implemented) — response shapes, persistence model, status transitions, out of scope items
     │   ├── finding_schema.md     # Empty
     │   └── scanner_architecture.md  # Empty
     ├── prompts/
     │   ├── session-start-prompt.md         # Template: paste into all agents at session start to read context files and confirm readiness
     │   ├── cowork-summary-prompt.md        # Template: summary prompt for Claude Cowork
     │   ├── desktop-claude-summary-prompt.md # Template: summary prompt for Desktop Claude Code
-    │   └── vscode-claude-summary-prompt.md  # Template: summary prompt for VS Code Claude Code (this session's prompt)
+    │   └── vscode-claude-summary-prompt.md  # Template: summary prompt for VS Code Claude Code
     └── summaries/
-        ├── cowork-summary.md       # Cowork session summary — last updated 2026-03-30, records workflow setup, FUSE issue, next steps
+        ├── cowork-summary.md       # Cowork session summary — last updated 2026-03-30
         ├── desktop-claude-summary.md # Desktop Claude Code summary — last updated 2026-03-30
-        └── vscode-claude-summary.md  # VS Code Claude Code summary — last updated 2026-03-30
+        └── vscode-claude-summary.md  # VS Code Claude Code summary — last updated 2026-03-31
 ```
 
 ---
 
 ## Implemented Features
 
-- **FastAPI application** with health check (`GET /health`) and scan endpoint (`POST /scan`)
+- **FastAPI application** with health check (`GET /health`), scan endpoint (`POST /scan`), and scan retrieval (`GET /scan/{scan_id}`)
 - **Full scan pipeline**: receive URL → clone repo → run scanners → normalize findings → persist results → cleanup temp dir → return response
+- **Scan retrieval**: query scan by ID, deserialize findings from JSON, coerce None to empty list, return full details with status and created_at
 - **Finding data model**: Pydantic model with id, title, description, severity (enum), file, line, scanner, confidence
-- **Request/response models**: ScanRequest (repository_url) and ScanResponse (scan_id, List[Finding])
+- **Request/response models**: ScanRequest (repository_url), ScanResponse (scan_id, List[Finding]), ScanDetailResponse (scan_id, repository_url, status, List[Finding], created_at)
 - **Scan persistence**: SQLite via SQLAlchemy 2.x, ScanRecord table (id UUID, repository_url, status, findings JSON, created_at), database initialized at app startup
 - **Database layer**: engine, session factory, get_db() FastAPI dependency, declarative base isolated to prevent circular imports
 - **Repository cloning service**: clones via subprocess, creates temp dir, raises RepoCloneError on failure with cleanup
@@ -107,16 +110,16 @@ BugSniffer/
 - **Semgrep scanner**: runs `semgrep --config auto <path> --json --quiet`, parses JSON output, maps severity and confidence to Finding objects
 - **Scanner registry**: centralized `get_scanners()` function returning [BanditScanner, SemgrepScanner]
 - **Logging**: root logger configured in main.py (INFO level), module-level loggers in repo_service, scan_service, bandit_scanner, semgrep_scanner
-- **API error handling**: RepoCloneError returns 400, generic exceptions return 500 with structured JSON responses
-- **Tests**: 10 passing tests covering scan API (200/400), scan service (clone failure, successful scan), scan persistence (complete record, failed record), and SemgrepScanner (success, empty stdout, invalid JSON, missing executable)
+- **API error handling**: RepoCloneError returns 400, generic exceptions return 500 with structured JSON responses, unknown scan IDs return 404
+- **Tests**: 19 passing tests covering scan API (200/400), scan service (clone failure, successful scan), scan persistence (complete record, failed record), GET /scan/{id} (success, 404, failed status, pending status), BanditScanner (success, empty stdout, invalid JSON, missing executable, confidence mapping), and SemgrepScanner (success, empty stdout, invalid JSON, missing executable)
 - **Docker setup**: Dockerfile (python:3.11-slim) and docker-compose.yml (single api service, port 8000, dev volume mount)
+- **README**: project description, Docker and local quick start, API endpoint table with curl example, test instructions
 
 ---
 
 ## Partially Implemented
 
-- **Documentation plans**: api_design.md has full content (scan persistence + GET /scan/{id} design); finding_schema.md and scanner_architecture.md exist but are empty
-- **README** — file exists but is empty
+- **Documentation plans**: api_design.md has full content (scan persistence + GET /scan/{id} design, now fully implemented); finding_schema.md and scanner_architecture.md exist but are empty
 - **Environment config** — .env.example exists but is empty
 
 ---
@@ -126,8 +129,6 @@ BugSniffer/
 - **Frontend** — all frontend directories are empty placeholders, no React/Next.js code
 - **AI agent layer** — agents/ directory is empty, no LLM integration
 - **Prompt templates for AI agents** — prompts/ directory is empty
-- **GET /scan/{id} endpoint** — designed in docs/plans/api_design.md, not built
 - **Authentication / authorization** — not designed or implemented
 - **Async scan processing / job queue** — scans currently block the HTTP request
-- **BanditScanner tests** — SemgrepScanner has 4 dedicated tests but BanditScanner has none
 - **Scripts** — scripts/ directory is empty
