@@ -1,6 +1,6 @@
 # Desktop Claude Code Summary
 
-*Last updated: 2026-03-31*
+*Last updated: 2026-04-01*
 
 This file is maintained by Desktop Claude Code (Desktop App).
 
@@ -8,33 +8,36 @@ This file is maintained by Desktop Claude Code (Desktop App).
 
 ## 1. Session Date
 
-2026-03-31
+2026-04-01
 
 ---
 
 ## 2. Changes Reviewed
 
-This was the first real development session. Three implementation tasks were completed:
+This was a planning-only session — no implementation code was written or committed. All changes are documentation:
 
-- **GET /scan/{id} endpoint** — New route in `backend/api/routes/scan.py`, new `get_scan_by_id()` service function in `backend/services/scan_service.py`, new `ScanDetailResponse` model in `backend/models/scan.py`, and 4 tests in `tests/test_get_scan.py`. Commit `881d1d9`.
-- **BanditScanner tests** — 5 tests in `tests/test_bandit_scanner.py` covering success, empty stdout, invalid JSON, missing executable, and confidence mapping (LOW/MEDIUM/HIGH/UNDEFINED). Commit `47732e2`.
-- **README content** — Project description, Docker and local quick start, API endpoint table with curl example, test instructions. Commit `5342f6c`.
+- **ShopSniffer product brief** (`docs/plans/product-vision-draft.md`) — 18-section product brief for the ShopSniffer pivot. Created, stress-tested, revised with 8 edits, and finalized. Untracked (not yet committed).
+- **Design-phase notes** (`docs/plans/design-phase-notes.md`) — 10 sections of deferred technical questions. Untracked.
+- **Stress-test results** (`docs/plans/product-brief-stress-test.md`) — adversarial review findings. Untracked.
+- **Word document** (`docs/plans/ShopSniffer-Product-Brief.docx`) — product brief in Word format. Untracked.
+- **New prompts** — `product-brief-stress-test-prompt.md` and `final-brief-alignment-check-prompt.md` added to `docs/prompts/`. Untracked.
+- **Updated summaries** — `docs/summaries/cowork-summary.md` and `docs/summaries/vscode-claude-summary.md` modified (unstaged).
+- **Updated project files** — `PROJECT_STATE.md` and `PROJECT_MAP.md` modified to reflect ShopSniffer pivot (unstaged).
 
-Test count went from 10 to 19. Phase 2 (Scanner Integration) is now complete.
+No commits were made this session. All changes are either untracked or unstaged modifications.
 
 ---
 
 ## 3. VS Code Claude Summary Verification
 
-`docs/summaries/vscode-claude-summary.md` (updated 2026-03-31) is **accurate**.
+`docs/summaries/vscode-claude-summary.md` (updated 2026-04-01) is **accurate**.
 
-- **Section 3** correctly marks Phase 2 as complete and lists 19 passing tests.
-- **Section 4 (Repository Structure)** matches the actual repo. All new files are listed: `test_get_scan.py`, `test_bandit_scanner.py`. `README.md` description updated. `scan.py` descriptions updated to include both endpoints. `scan_service.py` description includes `get_scan_by_id()`. `scan.py` model file includes `ScanDetailResponse`.
-- **Section 5 (Implemented Code)** accurately describes all changed and new files. The `get_scan_by_id()` description correctly notes the None-to-[] coercion and Finding deserialization.
-- **Section 6 (File Content Status)** now correctly lists `README.md` as having content, and the `conftest.py`/`test_scan_service.py` FUSE misclassification from last session has been fixed.
-- **Section 10 (Missing Core Components)** correctly removed BanditScanner tests (now implemented) and GET /scan/{id} (now implemented). Remaining items are accurate.
-- **Section 14 (Commit History)** is now complete — full history from `1119abd` (initial structure) through `5342f6c` (README), including all 3 commits from this session. The FUSE issue that blocked `git log` last session appears resolved.
-- **Cowork summary** (`docs/summaries/cowork-summary.md`) is still dated 2026-03-30 — it was not updated this session, which is noted in the summaries listing (line 116). This is expected if Cowork wasn't used for end-of-session summary this time.
+- **Section 3** correctly describes Phase 2 as complete and adds the ShopSniffer product pivot context.
+- **Section 4 (Repository Structure)** lists all new files accurately, including the untracked ShopSniffer docs and new prompts. File descriptions are correct.
+- **Section 5 (Implemented Code)** is unchanged from last session and remains accurate — no implementation code was modified.
+- **Section 12 (Overall Project State)** correctly describes the ShopSniffer pivot status.
+- **Section 13 (Technical Debt)** correctly notes no new debt was introduced.
+- **Section 15 (Commit History)** is accurate — no new commits this session.
 
 No discrepancies found.
 
@@ -42,51 +45,49 @@ No discrepancies found.
 
 ## 4. PROJECT_STATE.md Verification
 
-`PROJECT_STATE.md` (updated 2026-03-31) is **accurate**.
+`PROJECT_STATE.md` (updated 2026-04-01) is **accurate with minor date issues**.
 
-- Phase correctly updated to "Phase 2 – Scanner Integration (complete)".
-- All three new features (GET endpoint, BanditScanner tests, README) are reflected in the Implemented Components list.
-- Test count of 19 is correct (verified via grep: 2+2+2+4+5+4 = 19).
-- `ScanDetailResponse` correctly listed in Key Data Model section.
-- GET /scan/{id} behavior accurately described in Current System Capability, including the None-to-[] coercion and 404 handling.
-- Next Logical Steps are reasonable: Phase 3 design, backlog items, empty plan files, architecture doc update.
-- `api_design.md` correctly noted as "now fully implemented" in both Partially Implemented and Existing Documentation sections.
+- Phase line correctly updated to include "ShopSniffer product brief agreed — entering design phase."
+- Existing Documentation (line 85) now lists all ShopSniffer plan files and all 9 prompts — verified against disk, all files present.
+- Next Logical Steps (lines 119-125) correctly starts with ShopSniffer architecture design and includes cleanup of duplicate test files.
+- BugSniffer codebase state (19 tests, Phase 2 complete, etc.) remains accurate.
 
-No inaccuracies found.
+**Minor issue:** Line 89 lists summaries dates as cowork-summary.md "updated 2026-03-31" and desktop-claude-summary.md "updated 2026-03-31." Both files have been updated to 2026-04-01 this session and show that date in their content. These dates in PROJECT_STATE.md are stale.
 
 ---
 
 ## 5. PROJECT_MAP.md Verification
 
-`PROJECT_MAP.md` (verified 2026-03-31) is **accurate with one minor note**.
+`PROJECT_MAP.md` (updated 2026-04-01) is **accurate with minor date issues**.
 
-- File tree matches the actual repository structure. All new files present: `test_get_scan.py` (line 65), `test_bandit_scanner.py` (line 66).
-- File descriptions are accurate and detailed. The `scan.py` route description (line 27) correctly covers both endpoints. The `scan_service.py` description (line 41) correctly covers both functions.
-- Implemented Features section correctly includes scan retrieval, ScanDetailResponse, and 404 handling.
-- Not Implemented Yet section is current — BanditScanner tests removed (now implemented), GET /scan/{id} removed (now implemented).
+- Plans section (lines 82-87) lists all 7 files including ShopSniffer docs — matches disk.
+- Prompts section (lines 89-97) lists all 9 prompts — matches disk.
+- Partially Implemented section (line 132) correctly notes ShopSniffer brief as complete but architecture not started.
+- File tree structure matches the actual repository.
 
-**Minor note:** Two leftover `.claude/worktrees/` directories exist on disk (`objective-cori/` and `gallant-keller/`), each containing full copies of the source tree. These are Claude Code agent worktree artifacts and are not tracked in git, so their absence from the map is acceptable. However, if they persist, they should be cleaned up to avoid confusion.
+**Minor issues:**
+- Line 17: `PROJECT_STATE.md` described as "last updated 2026-03-31" — it's now 2026-04-01.
+- Lines 99-101: summaries dates show cowork and desktop summaries as "last updated 2026-03-31" — both are now 2026-04-01.
 
 ---
 
-## 6. Code Quality Observations
+## 6. Code Quality Review Findings
 
-- **GET /scan/{id} implementation is clean.** The route handler (5 lines), service function (14 lines), and response model (6 lines) are all minimal and focused. The `None`-to-`[]` coercion for findings happens in the service layer (line 21 of `scan_service.py`), not the route — correct placement.
-- **`ScanDetailResponse | None` union syntax** in `scan_service.py:16` uses Python 3.10+ syntax while the rest of the codebase uses `Optional[X]`. Noted last session as style drift, not a bug. Still present.
-- **BanditScanner tests are well-structured.** The confidence mapping test (test 5) exercises all three map values plus the default fallback in a single test — exactly as reviewed in the plan.
-- **README is concise and well-targeted.** Incorporated review feedback: merged capabilities into endpoint table to avoid duplication, noted Python 3.11+ requirement, folded tech stack into description.
-- **Pydantic `class Config` deprecation** in `finding.py` remains. Still tracked in `docs/backlog.md`.
-- **`scanners/__init__.py`** still missing. Still noted in VS Code summary Section 10.
-- **FUSE filesystem issue appears resolved.** `conftest.py` and `test_scan_service.py` content was visible via system reminders at session start (showing full file contents). `git log` succeeded this session (full commit history retrieved in Section 14). This is a significant improvement from last session.
+No code quality reviews were performed this session. No implementation code was written — the session was entirely product brief creation, stress testing, and alignment checking. The structured review checklist (`docs/prompts/desktop-claude-review-prompt.md`) applies to implementation steps, which did not occur.
+
+**Stress-test observations on the product brief (not code review, but relevant):**
+
+I performed a stress test of the product brief using the 8-section adversarial prompt. During my initial read of `product-vision-draft.md`, I identified several gaps (missing post-publish validation, GDPR/uninstall flow, free tier AI access, one-click rollback UX). On re-read, I discovered these had already been addressed by stress-test edits applied earlier in the session. The current version (18 sections, 343 lines) incorporates all 8 feedback edits described in the cowork summary.
+
+One finding that remains valid: the brief does not address what happens when a store hits Shopify's 20-theme limit during AI code editing. This is captured in `docs/plans/design-phase-notes.md` Section 1, so it won't be lost.
 
 ---
 
 ## 7. Notes for Next Session
 
-- **FUSE issue may be resolved.** Both previously unreadable test files and `git log` worked this session. Verify by attempting to read `conftest.py`, `test_scan_service.py`, and `.gitignore` directly at session start.
-- **Leftover worktrees** in `.claude/worktrees/` (two full repo copies) should be cleaned up if they persist.
-- **Phase 2 is complete.** Next priorities per PROJECT_STATE.md:
-  1. Begin Phase 3 — AI Analysis Layer design (create design doc in `docs/plans/`)
-  2. Address backlog items (Pydantic ConfigDict migration, dev dependency split)
-  3. Update `docs/architecture.md` to reflect GET /scan/{id} as implemented
-- **Style consistency:** Consider standardizing on either `Optional[X]` or `X | None` across the codebase. Currently mixed.
+- **Nothing was committed this session.** All new files (product brief, design-phase notes, stress-test results, new prompts) are untracked. The modified files (PROJECT_STATE.md, PROJECT_MAP.md, all three summaries) are unstaged. These should be committed early in the next session.
+- **Minor date inconsistencies** in PROJECT_STATE.md (line 89) and PROJECT_MAP.md (lines 17, 99-101) — summaries dates still say 2026-03-31 when the actual files are 2026-04-01. Low priority but should be fixed when committing.
+- **Duplicate test files still exist:** `tests/conftest 2.py` and `tests/test_scan_service 2.py` (flagged last session). Still untracked and should be deleted.
+- **Leftover worktrees** in `.claude/worktrees/` may still be present. Check and clean up.
+- **Next priority is ShopSniffer architecture design** — the product brief is finalized, design-phase notes capture all open questions. The next step is to produce architecture/design documents in `docs/plans/`.
+- **The product brief is the source of truth.** Per the cowork summary: every technical decision during design should trace back to `docs/plans/product-vision-draft.md`.

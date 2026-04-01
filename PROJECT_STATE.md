@@ -1,7 +1,7 @@
 # BugSniffer — Project State
 
-Last Updated: 2026-03-31
-Phase: Phase 2 – Scanner Integration (complete)
+Last Updated: 2026-04-01
+Phase: Phase 2 – Scanner Integration (complete) | ShopSniffer product brief agreed — entering design phase
 
 ---
 
@@ -82,11 +82,11 @@ docs/
 - roadmap.md — 5-phase development plan
 - development_workflow.md — three-agent workflow guide with tools, AI roles, session procedures
 - COWORK_PROJECT_INSTRUCTIONS.md — Cowork project instructions (loaded into Cowork settings)
-- plans/ — api_design.md (scan persistence and GET /scan/{id} design, now implemented), finding_schema.md and scanner_architecture.md (empty)
+- plans/ — api_design.md (implemented), product-vision-draft.md (ShopSniffer product brief, 18 sections, agreed), design-phase-notes.md (10 sections of deferred technical questions), product-brief-stress-test.md (stress-test results), ShopSniffer-Product-Brief.docx (original Word doc), finding_schema.md and scanner_architecture.md (empty)
 - adr/ — 001-use-fastapi.md, 002-finding-schema.md, 003-scanner-plugin-interface.md (all written with full content)
 - backlog.md — tracked housekeeping items (Pydantic ConfigDict migration, dev dependency split)
-- prompts/ — session-start-prompt.md, cowork-summary-prompt.md, desktop-claude-summary-prompt.md, vscode-claude-summary-prompt.md (all with content)
-- summaries/ — cowork-summary.md (updated 2026-03-30), desktop-claude-summary.md (updated 2026-03-30), vscode-claude-summary.md (updated 2026-03-31)
+- prompts/ — session-start-prompt.md, cowork-summary-prompt.md, cowork-architecture-review-prompt.md, desktop-claude-summary-prompt.md, desktop-claude-review-prompt.md, vscode-claude-summary-prompt.md, product-brief-stress-test-prompt.md, fresh-agent-audit-prompt.md, final-brief-alignment-check-prompt.md (all with content)
+- summaries/ — cowork-summary.md (updated 2026-03-31), desktop-claude-summary.md (updated 2026-03-31), vscode-claude-summary.md (updated 2026-04-01)
 - README.md — project description, quick start guides, API endpoints, test instructions
 
 ---
@@ -116,7 +116,9 @@ docs/
 
 ## Next Logical Steps
 
-1. Begin Phase 3 — AI Analysis Layer design (create design doc in docs/plans/)
-2. Address backlog items (Pydantic ConfigDict migration, dev dependency split)
-3. Write content for empty plan files (finding_schema.md, scanner_architecture.md)
-4. Update docs/architecture.md to reflect GET /scan/{id} as implemented
+1. Begin ShopSniffer architecture and design work — reference product-vision-draft.md and design-phase-notes.md
+2. Resolve design-phase technical questions (10 sections in design-phase-notes.md)
+3. Address backlog items (Pydantic ConfigDict migration, dev dependency split)
+4. Write content for empty plan files (finding_schema.md, scanner_architecture.md)
+5. Update docs/architecture.md to reflect GET /scan/{id} as implemented
+6. Clean up duplicate untracked files: tests/conftest 2.py, tests/test_scan_service 2.py

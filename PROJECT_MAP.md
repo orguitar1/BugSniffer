@@ -1,6 +1,6 @@
 # BugSniffer — Project Map
 
-Last verified: 2026-03-31
+Last verified: 2026-04-01
 
 ---
 
@@ -79,17 +79,26 @@ BugSniffer/
     │   └── 003-scanner-plugin-interface.md  # ADR: Use ABC and registry pattern for scanner plugin discovery — BaseScanner interface, get_scanners() registry
     ├── plans/
     │   ├── api_design.md         # Design doc: scan persistence via SQLite/SQLAlchemy + GET /scan/{id} endpoint (now fully implemented) — response shapes, persistence model, status transitions, out of scope items
+    │   ├── product-vision-draft.md # ShopSniffer product brief — 18 sections, reviewed and agreed, guides all architecture decisions
+    │   ├── design-phase-notes.md   # ShopSniffer design-phase technical questions — 10 sections of deferred questions
+    │   ├── product-brief-stress-test.md # Stress-test results and findings for the product brief
+    │   ├── ShopSniffer-Product-Brief.docx # Original product brief in Word format
     │   ├── finding_schema.md     # Empty
     │   └── scanner_architecture.md  # Empty
     ├── prompts/
-    │   ├── session-start-prompt.md         # Template: paste into all agents at session start to read context files and confirm readiness
-    │   ├── cowork-summary-prompt.md        # Template: summary prompt for Claude Cowork
-    │   ├── desktop-claude-summary-prompt.md # Template: summary prompt for Desktop Claude Code
-    │   └── vscode-claude-summary-prompt.md  # Template: summary prompt for VS Code Claude Code
+    │   ├── session-start-prompt.md             # Template: paste into all agents at session start to read context files and confirm readiness
+    │   ├── cowork-summary-prompt.md            # Template: summary prompt for Claude Cowork
+    │   ├── cowork-architecture-review-prompt.md # Architecture review prompt for Cowork
+    │   ├── desktop-claude-summary-prompt.md    # Template: summary prompt for Desktop Claude Code
+    │   ├── desktop-claude-review-prompt.md     # Review prompt for Desktop Claude Code
+    │   ├── vscode-claude-summary-prompt.md     # Template: summary prompt for VS Code Claude Code
+    │   ├── product-brief-stress-test-prompt.md # Stress-test prompt for product brief
+    │   ├── fresh-agent-audit-prompt.md         # Fresh agent audit prompt
+    │   └── final-brief-alignment-check-prompt.md # Final alignment check prompt
     └── summaries/
-        ├── cowork-summary.md       # Cowork session summary — last updated 2026-03-30
-        ├── desktop-claude-summary.md # Desktop Claude Code summary — last updated 2026-03-30
-        └── vscode-claude-summary.md  # VS Code Claude Code summary — last updated 2026-03-31
+        ├── cowork-summary.md       # Cowork session summary — last updated 2026-03-31
+        ├── desktop-claude-summary.md # Desktop Claude Code summary — last updated 2026-03-31
+        └── vscode-claude-summary.md  # VS Code Claude Code summary — last updated 2026-04-01
 ```
 
 ---
@@ -120,6 +129,7 @@ BugSniffer/
 ## Partially Implemented
 
 - **Documentation plans**: api_design.md has full content (scan persistence + GET /scan/{id} design, now fully implemented); finding_schema.md and scanner_architecture.md exist but are empty
+- **ShopSniffer product brief** — product-vision-draft.md and design-phase-notes.md are complete and agreed; architecture and design work has not started
 - **Environment config** — .env.example exists but is empty
 
 ---

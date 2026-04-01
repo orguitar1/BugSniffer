@@ -1,125 +1,118 @@
 # Cowork Summary
 
-*Last updated: 2026-03-31*
+*Last updated: 2026-04-01*
 
 ---
 
 ## 1. Session Date
 
-2026-03-31
+2026-04-01
 
 ---
 
 ## 2. Session Overview
 
-This was the first real development session using the three-agent workflow. Three implementation steps were planned and completed: adding the `GET /scan/{id}` endpoint, adding BanditScanner tests, and writing README content. A preliminary fix was also performed to recreate two FUSE-locked test files (`conftest.py`, `test_scan_service.py`) from git history. All three steps went through the full workflow cycle: Cowork planned and generated prompts, Desktop Claude reviewed plans and provided feedback, VS Claude implemented, all three agents reviewed the results. Phase 2 (Scanner Integration) is now complete. Test count went from 10 to 19.
+This was a planning-only session — no code was written or committed. The project is pivoting from BugSniffer (code security scanner) to ShopSniffer (Shopify store health AI assistant). The entire session focused on getting the product brief to a solid, stress-tested state before any design or implementation work begins.
 
-An important workflow addition was established: at the end of each session, Cowork will provide a full learning breakdown explaining every change — what was done, why, and how the pieces connect — since the primary objective of this project is for the user to learn how an app like this is built and how to leverage AI effectively during development.
+Key accomplishments:
+- Integrated GPT-suggested workflow improvements (failure-first planning, structured review checklists, fresh agent audits) into the development workflow documents and created 7 new/updated prompt files.
+- Completed the ShopSniffer product brief through three rounds of review: initial draft, multi-agent feedback, and a full four-agent stress test.
+- Applied all 8 stress-test feedback edits to the product brief (post-publish health check, one-click rollback, free tier with AI access, honest support model, GDPR/uninstall lifecycle, Plan B for code editing, AI behavior with incomplete data, unit economics).
+- Created a design-phase notes document capturing 10 categories of technical questions deferred to architecture design.
+- Ran a final alignment check with both other agents — no blocking issues found, two minor gaps added to design-phase notes.
+
+The product brief is now finalized and ready to guide architecture design.
 
 ---
 
 ## 3. Steps Completed
 
-- **Preliminary fix: FUSE-locked file recreation.** `tests/conftest.py` and `tests/test_scan_service.py` were recreated from git history to resolve a persistent FUSE deadlock that prevented reading them. VS Claude extracted them via `git show`, removed the locked originals, and renamed the recovered files into place. All 10 existing tests passed after recreation.
-- **Step 1: GET /scan/{id} endpoint.** New route in `backend/api/routes/scan.py` with `response_model=ScanDetailResponse`. New `get_scan_by_id()` service function in `backend/services/scan_service.py` that queries by ID, deserializes findings JSON back into Finding objects, and coerces `None` findings to `[]` for failed/pending scans. New `ScanDetailResponse` model in `backend/models/scan.py`. 4 new tests in `tests/test_get_scan.py` covering success, 404, failed status, and pending status. Commit `881d1d9`.
-- **Step 2: BanditScanner tests.** 5 tests in `tests/test_bandit_scanner.py` covering successful scan, empty stdout, invalid JSON, missing executable, and confidence mapping (LOW=0.3, MEDIUM=0.6, HIGH=0.9, UNDEFINED=0.6 default). The confidence mapping test was added per Desktop Claude's recommendation — it exercises BanditScanner-specific logic not present in SemgrepScanner. Commit `47732e2`.
-- **Step 3: README content.** Concise README with project description (tech stack integrated into description per Desktop Claude's feedback), project status with roadmap link, Docker and local quick start (Python 3.11+ noted as prerequisite per Desktop Claude), API endpoint table (merged with capabilities section to avoid duplication per Desktop Claude), curl example, and test instructions. Commit `5342f6c`.
+- **Workflow improvements:** Updated `docs/development_workflow.md` and `docs/COWORK_PROJECT_INSTRUCTIONS.md` with failure-first planning (step 4 in planning phase), structured review checklists (replacing vague approvals), and fresh agent audit process. Created new prompts: `fresh-agent-audit-prompt.md`, `desktop-claude-review-prompt.md`, `cowork-architecture-review-prompt.md`. Updated existing prompts: `cowork-summary-prompt.md`, `desktop-claude-summary-prompt.md`, `vscode-claude-summary-prompt.md`, `session-start-prompt.md`.
+- **Product brief creation and iteration:** `docs/plans/product-vision-draft.md` — 18-section product brief covering: product definition, target customers, merchant experience (including AI code editing via preview themes), scan categories, AI architecture with multi-agent verification, interaction records, trust/safety principles, monetization (tiered with caps on all tiers), platform strategy, competitive position, known risks, support model, non-previewable actions, API scopes validation, AI reliability threshold, data lifecycle/privacy (GDPR), internal business analytics, and next steps.
+- **Product brief docx:** `docs/plans/ShopSniffer-Product-Brief.docx` — Word document version generated via docx-js, now in sync with the markdown.
+- **Stress-test prompt:** `docs/prompts/product-brief-stress-test-prompt.md` — 8-section adversarial review prompt used to pressure-test the brief.
+- **Design-phase notes:** `docs/plans/design-phase-notes.md` — 10 sections of technical questions for architecture design: Shopify API mechanics, scanning architecture, AI architecture, data model, security/permissions, app-to-script mapping, multilingual support, notification system, support team tooling, infrastructure/deployment.
+- **Final alignment check prompt:** `docs/prompts/final-brief-alignment-check-prompt.md` — quick alignment pass prompt for confirming all agents are on the same page.
 
 ---
 
 ## 4. Architecture Decisions
 
-No new architectural decisions were made this session. The GET /scan/{id} endpoint follows the existing design in `docs/plans/api_design.md`, which is now fully implemented. The decision to use a separate `ScanDetailResponse` model (rather than extending `ScanResponse`) was discussed and agreed by all three agents — the two responses serve different purposes (creation receipt vs. full record view).
+No formal ADRs were created this session (no code was written). However, several product-level decisions were made that will constrain the architecture:
 
-Existing ADRs remain current and accurate: 001 (FastAPI), 002 (Finding schema), 003 (Scanner plugin interface).
-
----
-
-## 5. Cross-Agent Verification
-
-### VS Code Claude Summary (`docs/summaries/vscode-claude-summary.md`)
-
-**Accurate.** Updated to 2026-03-31. All issues from last session have been addressed:
-
-- Section 6 (File Content Status) now correctly classifies `conftest.py` and `test_scan_service.py` as real files with content. The FUSE misclassification from last session is fixed.
-- Section 10 (Missing Core Components) correctly removed GET /scan/{id} and BanditScanner tests (both now implemented). Remaining items are accurate.
-- Section 14 (Commit History) now shows the full commit history from `1119abd` through `5342f6c` — the FUSE issue that blocked `git log` last session is resolved. I verified this independently: `git log --oneline` returns all 42 commits.
-- `.vscode/settings.json` is now mentioned in the repository structure (Section 4, line 45).
-- README.md correctly described as having content.
-- All three new features accurately described in their respective sections.
-
-No discrepancies found.
-
-### Desktop Claude Summary (`docs/summaries/desktop-claude-summary.md`)
-
-**Accurate and thorough.** Updated to 2026-03-31. Desktop Claude performed a strong review of all three implementation steps:
-
-- Correctly verified the test count of 19 (2+2+2+4+5+4 = 19).
-- Correctly noted the `ScanDetailResponse | None` union syntax style drift (Python 3.10+ syntax vs. `Optional[X]` used elsewhere). This is a valid observation — not a bug, but a consistency point.
-- Correctly noted that the FUSE issue appears resolved this session.
-- Correctly flagged leftover `.claude/worktrees/` directories as cleanup candidates. I cannot verify these from my tools, but the observation is reasonable.
-- Correctly noted the Pydantic `class Config` deprecation and missing `scanners/__init__.py` as still outstanding from last session.
-- The note about Cowork summary still being dated 2026-03-30 was correct at the time of review — this update addresses that.
-
-No discrepancies found.
-
-### PROJECT_STATE.md
-
-**Accurate and current.** Updated to 2026-03-31. Key verifications:
-
-- Phase correctly updated to "Phase 2 – Scanner Integration (complete)".
-- All three new features reflected in Implemented Components.
-- Test count of 19 is correct — I verified independently.
-- `ScanDetailResponse` correctly listed in Key Data Model section.
-- GET /scan/{id} behavior accurately described in Current System Capability, including None-to-[] coercion.
-- `api_design.md` correctly noted as "now fully implemented".
-- Next Logical Steps are reasonable: Phase 3 design, backlog items, empty plan files, architecture doc update.
-- README correctly listed in Implemented Components.
-
-No inaccuracies found.
-
-### PROJECT_MAP.md
-
-**Accurate.** Updated to 2026-03-31. Key verifications:
-
-- File tree matches the actual repository. I ran a full file listing and compared — all files present, no phantom entries.
-- `tests/.gitkeep` is now listed (was missing last session).
-- `.vscode/settings.json` is now listed (was missing last session).
-- All new files present: `test_get_scan.py`, `test_bandit_scanner.py`.
-- File descriptions are accurate and detailed, including the updated descriptions for `scan.py` (routes), `scan_service.py`, and `scan.py` (models).
-- Implemented Features, Partially Implemented, and Not Implemented Yet sections are all current.
-
-No inaccuracies found.
-
-**Overall: All four files are consistent with each other and with the actual codebase. No conflicting information between the three summaries. All discrepancies flagged last session have been resolved.**
+- **Preview theme system:** AI edits code in duplicate themes only, never the live store. Merchant previews and decides to publish. Previous theme preserved for rollback. This is reinforced by a Shopify platform constraint (apps can no longer edit live code directly).
+- **No automated preview testing:** The merchant reviews the preview themselves. The system does NOT pre-test the preview and tell the merchant "it's fine." This was an explicit user decision to avoid false trust in the AI.
+- **Post-publish health check:** After a merchant publishes, the system automatically scans to catch regressions that weren't visible during preview.
+- **Multi-agent AI verification:** Analysis agent, verification agent, and confidence calibration. The AI never states something with more confidence than the data supports.
+- **Usage caps on all tiers:** No unlimited plans, including the top tier.
+- **Free tier includes limited AI:** 1–2 AI interactions per scan so merchants experience the actual product, not just a dashboard.
+- **Honest support model:** Don't promise 24/7 at launch if it's one person. Scale honestly.
+- **Plan B for code editing:** Scanning + AI chat is a shippable product even without code editing. Code editing starts with low-risk fixes only.
+- **Unit economics before pricing:** LLM cost per merchant must be modeled before pricing tiers are finalized.
 
 ---
 
-## 6. Current Project State
+## 5. Architecture Review Findings
 
-BugSniffer has completed **Phase 2 — Scanner Integration**. The backend is fully functional: a user can POST a repository URL to `/scan`, the system clones the repo, runs Bandit and Semgrep scanners, persists results to SQLite, and returns normalized findings. Scan results can be retrieved later via `GET /scan/{id}`. There are 19 passing tests covering the scan API, scan service, scan persistence, GET endpoint (including edge cases for failed/pending scans), BanditScanner (including confidence mapping), and SemgrepScanner. Docker support is in place. Documentation is comprehensive including a README, architecture docs, three ADRs, a development roadmap, and the full three-agent workflow.
-
-No frontend, AI agent layer, or async processing exists yet. The project is ready to begin Phase 3 (AI Analysis Layer) design.
+No architecture reviews were performed this session. No implementation code was written — the session was entirely product brief creation, stress testing, and alignment checking. The structured architecture review checklist (`docs/prompts/cowork-architecture-review-prompt.md`) applies to implementation steps, which did not occur.
 
 ---
 
-## 7. Next Steps
+## 6. Cross-Agent Verification
 
-1. **Begin Phase 3 — AI Analysis Layer design** — create a design document in `docs/plans/` before any implementation. This is the next major feature area.
-2. **Address backlog items** — Pydantic `ConfigDict` migration (replace deprecated `class Config` in `finding.py`), dev dependency split (`requirements-dev.txt` for pytest/httpx).
-3. **Update `docs/architecture.md`** — reflect GET /scan/{id} as implemented.
-4. **Write content for empty plan files** — `finding_schema.md` and `scanner_architecture.md`.
+### End-of-Session Summary Verification (2026-04-01)
+
+**VS Code Claude summary (`docs/summaries/vscode-claude-summary.md`):** Accurate and thorough. Updated to 2026-04-01. Correctly reflects the ShopSniffer pivot, lists all new files in the repository structure (Section 4), notes no implementation code was changed, identifies the product brief as 18 sections. Section 12 (Overall Project State) correctly describes the strategic pivot. Section 13 (Technical Debt) correctly notes no new debt. Commit history unchanged and accurate. No discrepancies found.
+
+**Desktop Claude summary (`docs/summaries/desktop-claude-summary.md`):** Accurate. Updated to 2026-04-01. Correctly identifies this as a planning-only session with no commits. VS Code summary verification (Section 3) is accurate. Correctly flags the minor date inconsistency in PROJECT_STATE.md line 89 (summaries listed as 2026-03-31 when they're now 2026-04-01). The theme limit observation in Section 6 is valid and is captured in design-phase notes Section 1. Section 7 correctly flags that nothing was committed this session. No discrepancies found.
+
+**PROJECT_STATE.md:** Accurate with one minor issue. Phase line correctly reflects ShopSniffer pivot. All new files are listed in Existing Documentation. Next Logical Steps are correct. **Minor issue:** Line 89 still lists cowork-summary.md and desktop-claude-summary.md as "updated 2026-03-31" — both are now 2026-04-01. Low priority, should be fixed when committing.
+
+**PROJECT_MAP.md:** Accurate with same minor date issue. File tree matches the actual repository. All new ShopSniffer files present. Desktop Claude flagged stale dates on lines 17, 99-101 — confirmed, same low-priority fix needed.
+
+### Final Alignment Check Results (2026-04-01)
+
+Both agents confirmed alignment with the product brief. Two minor flags were raised and addressed:
+
+**Agent 1 flag:** Free tier / "AI is the product" tension — the free tier does include limited AI access (added during stress-test edits), but the UX implications of a limited AI experience need attention during design. Valid design-time question, not a brief issue.
+
+**Agent 1 flag:** Shopify compliance webhooks missing from design-phase notes — valid. The product brief covers the mandatory webhooks (Section 16.2) but the design notes didn't reference the implementation details. Added to Section 5 of design-phase notes.
+
+**Agent 2 flag:** Post-publish verification scan missing — incorrect. This was already added to Section 3.4 during the stress-test edits. Agent likely read a cached version.
+
+**Agent 2 flag:** Tier upgrade/downgrade effects on data access not captured — valid. Added to Section 4 of design-phase notes.
+
+**Overall: All three summaries are consistent with each other and with the actual repository state. No conflicting information between the agents. The only issue is stale dates in PROJECT_STATE.md and PROJECT_MAP.md, which should be corrected when committing this session's changes.**
 
 ---
 
-## 8. Notes and Concerns
+## 7. Current Project State
 
-- **FUSE filesystem issue is resolved.** The two previously locked test files were recreated from git history. `.gitignore` became readable on its own after a session restart. `git log` now works fully. All 42 commits are visible. This issue should no longer block any agent.
-- **`.DS_Store` is now gitignored.** Confirmed by reading `.gitignore` this session — entry is present (added in commit `0b67a5f`).
-- **`bugsniffer.db` is gitignored.** Also confirmed in `.gitignore`.
-- **`scanners/` still lacks `__init__.py`** — not a bug but inconsistent with `backend/db/`. Still worth adding for consistency.
-- **Semgrep is unpinned** in `requirements.txt` — all other dependencies are pinned. Consider pinning for reproducibility.
-- **Test/dev dependency split** remains on the backlog (`docs/backlog.md`) — pytest and httpx should move to a `requirements-dev.txt`.
-- **Style drift: `ScanDetailResponse | None` vs `Optional[X]`** — Desktop Claude noted the mixed union syntax. Consider standardizing across the codebase.
-- **Leftover `.claude/worktrees/` directories** — Desktop Claude flagged these as cleanup candidates. Verify and clean up if they persist.
-- **Workflow addition: learning breakdown.** Each session will now end with a full explanation of all changes for the user's learning benefit. This is part of the project's educational objective.
+The project is in transition from BugSniffer to ShopSniffer. The existing BugSniffer codebase (FastAPI backend, scanner pipeline, SQLite persistence, 19 tests) still exists and parts of it may carry forward into the new architecture, but no decisions have been made about what transfers yet.
+
+The ShopSniffer product brief is finalized and stress-tested. The design-phase notes capture all deferred technical questions. The next phase is architecture design.
+
+No code changes were made this session. The BugSniffer codebase remains at the state described in the previous session's summary (Phase 2 complete, 19 tests, all passing).
+
+---
+
+## 8. Next Steps
+
+1. **Architecture design** — adapt the existing BugSniffer pipeline to ShopSniffer. Determine what carries over, what's new, what gets replaced. This should produce a design document in `docs/plans/`.
+2. **Phase planning** — define what gets built first, what's deferred, what a meaningful first version looks like.
+3. **Component design documents** — detailed specs for each system component (scanning, AI, theme editing, interaction records, etc.), each as a separate document in `docs/plans/`.
+4. **Early Shopify API scope validation** — submit a minimal app and request the scopes needed for the security/permissions feature. This runs in parallel with design work.
+5. **AI reliability metrics** — define concrete launch-readiness metrics before building the AI layer.
+
+---
+
+## 9. Notes and Concerns
+
+- **Product brief is the source of truth.** Every technical decision during design should trace back to `docs/plans/product-vision-draft.md`. If a design decision conflicts with the brief, the brief gets updated first.
+- **Design-phase notes must not be forgotten.** `docs/plans/design-phase-notes.md` contains 10 sections of questions that need answers during architecture design. Each section should eventually map to a design document.
+- **The existing BugSniffer codebase is still intact.** No files were deleted or modified. The pivot is at the product level; code-level decisions about what to keep happen during architecture design.
+- **Workflow improvements are in place.** The development workflow now includes failure-first planning, structured review checklists, and fresh agent audit triggers. These apply to ShopSniffer development going forward.
+- **All previous BugSniffer concerns still apply to the codebase** — unpinned Semgrep, missing `scanners/__init__.py`, style drift, Pydantic ConfigDict migration — but their relevance depends on what carries forward into ShopSniffer.
+- **Nothing was committed this session.** All new ShopSniffer files are untracked. All modified files (PROJECT_STATE.md, PROJECT_MAP.md, summaries) are unstaged. These should be committed early next session.
+- **Minor date inconsistencies** in PROJECT_STATE.md (line 89) and PROJECT_MAP.md (lines 17, 99-101) — summary dates still say 2026-03-31 when actual files are 2026-04-01. Should be fixed when committing.
+- **Duplicate test files** (`tests/conftest 2.py`, `tests/test_scan_service 2.py`) still exist untracked. Should be deleted.

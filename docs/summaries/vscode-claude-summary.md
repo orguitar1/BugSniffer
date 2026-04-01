@@ -1,6 +1,6 @@
 # VS Code Claude Code Summary
 
-*Last updated: 2026-03-31*
+*Last updated: 2026-04-01*
 
 This file is maintained by Claude Code (VS Code Extension).
 
@@ -8,7 +8,7 @@ This file is maintained by Claude Code (VS Code Extension).
 
 ## 1. Project Overview
 
-BugSniffer is an AI-assisted cybersecurity tool that analyzes source code repositories for security vulnerabilities. It clones a target repository, runs multiple static analysis scanners (Bandit, Semgrep), normalizes findings into a unified schema, persists results to a database, and returns structured vulnerability reports via a FastAPI REST API. The system is designed to be modular and extensible, with planned AI agent analysis and a frontend interface.
+BugSniffer is an AI-assisted cybersecurity tool that analyzes source code repositories for security vulnerabilities. It clones a target repository, runs multiple static analysis scanners (Bandit, Semgrep), normalizes findings into a unified schema, persists results to a database, and returns structured vulnerability reports via a FastAPI REST API. The system is designed to be modular and extensible, with planned AI agent analysis and a frontend interface. A strategic pivot toward **ShopSniffer** — a Shopify store health monitoring app with an AI assistant — is in product brief stage (see `docs/plans/product-vision-draft.md`).
 
 ---
 
@@ -33,6 +33,8 @@ Phase 1 (Project Foundation) and Phase 2 (Scanner Integration) are fully complet
 
 Not yet started: Phase 3 (AI Analysis Layer), Phase 4 (Frontend Interface), Phase 5 (System Expansion).
 
+**Product pivot in progress:** ShopSniffer product brief (`docs/plans/product-vision-draft.md`) and design-phase notes (`docs/plans/design-phase-notes.md`) have been written, stress-tested, reviewed by multiple agents, and agreed upon. Architecture and design work for ShopSniffer is the next major phase.
+
 ---
 
 ## 4. Repository Structure
@@ -44,8 +46,8 @@ BugSniffer/
 ├── .vscode/
 │   └── settings.json               # VS Code Python environment settings (tracked in repo)
 ├── Dockerfile                      # python:3.11-slim, copies backend/ and scanners/, exposes 8000
-├── PROJECT_MAP.md                  # Project structure map (this agent maintains)
-├── PROJECT_STATE.md                # Project state snapshot (this agent maintains)
+├── PROJECT_MAP.md                  # Project structure map
+├── PROJECT_STATE.md                # Project state snapshot
 ├── README.md                       # Project description, quick start (Docker + local), API endpoints, test instructions
 ├── docker-compose.yml              # Single api service, port 8000, volume mount for dev
 ├── requirements.txt                # fastapi, uvicorn, bandit, semgrep, pytest, httpx, sqlalchemy
@@ -84,7 +86,6 @@ BugSniffer/
 ├── scripts/                        # Empty (.gitkeep only)
 │
 ├── tests/
-│   ├── .gitkeep                    # Placeholder
 │   ├── conftest.py                 # pytest fixtures — in-memory SQLite, TestClient, get_db override
 │   ├── test_scan_api.py            # POST /scan 200 and 400 tests
 │   ├── test_scan_service.py        # scan_repository clone error and successful scan tests
@@ -105,16 +106,25 @@ BugSniffer/
     │   └── 003-scanner-plugin-interface.md  # ADR: ABC + registry for scanner discovery
     ├── plans/
     │   ├── api_design.md           # Scan persistence + GET /scan/{id} design (now implemented)
+    │   ├── product-vision-draft.md # ShopSniffer product brief (18 sections, agreed)
+    │   ├── design-phase-notes.md   # ShopSniffer design-phase technical questions (10 sections)
+    │   ├── product-brief-stress-test.md # Stress-test results for the product brief
+    │   ├── ShopSniffer-Product-Brief.docx # Original product brief (Word format)
     │   ├── finding_schema.md       # Empty
     │   └── scanner_architecture.md # Empty
     ├── prompts/
-    │   ├── session-start-prompt.md         # Session start prompt for all agents
-    │   ├── cowork-summary-prompt.md        # Summary prompt for Cowork
-    │   ├── desktop-claude-summary-prompt.md # Summary prompt for Desktop Claude Code
-    │   └── vscode-claude-summary-prompt.md  # Summary prompt for VS Code Claude Code
+    │   ├── session-start-prompt.md             # Session start prompt for all agents
+    │   ├── cowork-summary-prompt.md            # Summary prompt for Cowork
+    │   ├── cowork-architecture-review-prompt.md # Architecture review prompt for Cowork
+    │   ├── desktop-claude-summary-prompt.md    # Summary prompt for Desktop Claude Code
+    │   ├── desktop-claude-review-prompt.md     # Review prompt for Desktop Claude Code
+    │   ├── vscode-claude-summary-prompt.md     # Summary prompt for VS Code Claude Code
+    │   ├── product-brief-stress-test-prompt.md # Stress-test prompt for product brief
+    │   ├── fresh-agent-audit-prompt.md         # Fresh agent audit prompt
+    │   └── final-brief-alignment-check-prompt.md # Final alignment check prompt
     └── summaries/
-        ├── cowork-summary.md       # Cowork session summary (last updated 2026-03-30)
-        ├── desktop-claude-summary.md # Desktop Claude Code summary (last updated 2026-03-30)
+        ├── cowork-summary.md       # Cowork session summary (last updated 2026-03-31)
+        ├── desktop-claude-summary.md # Desktop Claude Code summary (last updated 2026-03-31)
         └── vscode-claude-summary.md  # This file
 ```
 
@@ -165,6 +175,10 @@ BugSniffer/
 - `backend/db/__init__.py`
 - `docs/plans/finding_schema.md`
 - `docs/plans/scanner_architecture.md`
+
+**Duplicate files (untracked, likely accidental):**
+- `tests/conftest 2.py`
+- `tests/test_scan_service 2.py`
 
 **Directories containing only .gitkeep:**
 - `agents/`
@@ -223,12 +237,21 @@ BugSniffer/
 | `docs/adr/002-finding-schema.md` | Has content — ADR for normalized Finding schema |
 | `docs/adr/003-scanner-plugin-interface.md` | Has content — ADR for scanner plugin interface |
 | `docs/plans/api_design.md` | Has content — scan persistence and GET /scan/{id} design (now fully implemented) |
+| `docs/plans/product-vision-draft.md` | Has content — ShopSniffer product brief, 18 sections, reviewed and agreed |
+| `docs/plans/design-phase-notes.md` | Has content — 10 sections of deferred technical questions for ShopSniffer |
+| `docs/plans/product-brief-stress-test.md` | Has content — stress-test results and findings for the product brief |
+| `docs/plans/ShopSniffer-Product-Brief.docx` | Has content — original product brief in Word format |
 | `docs/plans/finding_schema.md` | Empty |
 | `docs/plans/scanner_architecture.md` | Empty |
 | `docs/prompts/session-start-prompt.md` | Has content — session start prompt template |
-| `docs/prompts/cowork-summary-prompt.md` | Has content — Cowork summary prompt template |
-| `docs/prompts/desktop-claude-summary-prompt.md` | Has content — Desktop Claude summary prompt template |
-| `docs/prompts/vscode-claude-summary-prompt.md` | Has content — VS Code Claude summary prompt template |
+| `docs/prompts/cowork-summary-prompt.md` | Has content — Cowork summary prompt |
+| `docs/prompts/cowork-architecture-review-prompt.md` | Has content — architecture review prompt for Cowork |
+| `docs/prompts/desktop-claude-summary-prompt.md` | Has content — Desktop Claude summary prompt |
+| `docs/prompts/desktop-claude-review-prompt.md` | Has content — review prompt for Desktop Claude |
+| `docs/prompts/vscode-claude-summary-prompt.md` | Has content — VS Code Claude summary prompt |
+| `docs/prompts/product-brief-stress-test-prompt.md` | Has content — stress-test prompt for product brief |
+| `docs/prompts/fresh-agent-audit-prompt.md` | Has content — fresh agent audit prompt |
+| `docs/prompts/final-brief-alignment-check-prompt.md` | Has content — final alignment check prompt |
 
 ---
 
@@ -240,6 +263,7 @@ BugSniffer/
 - **Authentication/authorization** — not designed or implemented
 - **Async scan processing / job queue** — scans currently block the HTTP request
 - **`scanners/__init__.py`** — scanners package has no `__init__.py` (inconsistent with `backend/db/` which has one; not a bug but a consistency gap)
+- **ShopSniffer architecture** — product brief agreed, but no architecture design docs or implementation exist yet
 
 ---
 
@@ -259,11 +283,25 @@ BugSniffer/
 
 BugSniffer has completed Phase 2 (Scanner Integration) with a solid, fully tested backend. The core scan pipeline is functional end-to-end: POST a repository URL, clone it, run Bandit and Semgrep, persist results, and return normalized findings. Scans can be retrieved by ID via GET /scan/{id}. The project has 19 passing tests covering the API, services, persistence, and both scanners. Docker support, comprehensive documentation, and a README are all in place.
 
-The next logical steps are: begin Phase 3 (AI Analysis Layer) design, write content for empty plan files, and address backlog housekeeping items (Pydantic ConfigDict migration, dev dependency split).
+A significant development this session: the **ShopSniffer product brief** has been completed, stress-tested, reviewed by multiple agents, and agreed upon. The companion design-phase notes document captures 10 sections of deferred technical questions. This represents a strategic pivot from a generic code security scanner toward a Shopify-specific store health monitoring product with an AI assistant.
+
+The next logical steps are: begin ShopSniffer architecture and design work (referencing `docs/plans/product-vision-draft.md` and `docs/plans/design-phase-notes.md`), and address backlog housekeeping items (Pydantic ConfigDict migration, dev dependency split).
 
 ---
 
-## 13. Key Entry Points
+## 13. Technical Debt Introduced
+
+No new technical debt was introduced this session. Work was limited to product brief review, stress testing, and alignment checks — no implementation code was changed.
+
+**Pre-existing items (from docs/backlog.md):**
+- Pydantic ConfigDict migration (deferred — low priority housekeeping)
+- Dev dependency split to requirements-dev.txt (deferred — low priority housekeeping)
+
+**Note:** Two duplicate files exist untracked in the repo: `tests/conftest 2.py` and `tests/test_scan_service 2.py`. These should be deleted.
+
+---
+
+## 14. Key Entry Points
 
 - **Application entry point:** `backend/main.py` — FastAPI app creation, logger config, database init, router mounting
 - **Scan endpoints:** `backend/api/routes/scan.py` — `POST /scan` and `GET /scan/{scan_id}` route handlers
@@ -271,12 +309,16 @@ The next logical steps are: begin Phase 3 (AI Analysis Layer) design, write cont
 - **Scanner registration:** `scanners/registry.py` — `get_scanners()` function
 - **Database setup:** `backend/db/session.py` — engine, session factory, `get_db()` dependency
 - **Test configuration:** `tests/conftest.py` — fixtures for in-memory database and test client
+- **ShopSniffer product brief:** `docs/plans/product-vision-draft.md` — foundation for all architecture and design decisions
+- **Design-phase questions:** `docs/plans/design-phase-notes.md` — technical questions to resolve during architecture work
 
 ---
 
-## 14. Commit History
+## 15. Commit History
 
 ```
+19357ae docs(workflow): add failure-first planning, structured review checklists, and fresh audits
+8412c5f docs(summaries): update all agent summaries and project state for session 2026-03-31
 5342f6c docs: add README content
 47732e2 test(scanner): add BanditScanner tests with confidence mapping coverage
 881d1d9 feat(api): add GET /scan/{id} endpoint with tests
