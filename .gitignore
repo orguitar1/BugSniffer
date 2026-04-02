@@ -5,3 +5,4 @@ node_modules/
 .vscode/
 bugsniffer.db
 .DS_Store
+.claude/
