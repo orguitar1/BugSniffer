@@ -1,0 +1,25 @@
+# Session Start Prompt — All Agents
+
+Paste this prompt into all three agents (Cowork, Desktop Claude Code, VS Code Claude Code) at the start of every new session.
+
+---
+
+We are starting a new ShopSniffer development session. Read the following files one at a time, in this order:
+
+1. `docs/summaries/cowork-summary.md`
+2. `docs/summaries/desktop-claude-summary.md`
+3. `docs/summaries/vscode-claude-summary.md`
+4. `PROJECT_STATE.md`
+5. `PROJECT_MAP.md`
+
+After reading all five files, confirm the following:
+
+1. **Context** — Briefly summarize your understanding of where the project stands right now and what was accomplished last session.
+2. **Accuracy** — Flag anything that looks inconsistent between the summaries, or between the summaries and the project state/map files.
+3. **Fresh Audit Findings** — If fresh audit findings were shared at the start of this session, note any that should be addressed before new work begins.
+4. **Carry-Forward Items** — Note any unresolved issues, deferred tech debt, or review findings from last session that should inform today's planning.
+5. **Ready** — Confirm you are ready to begin work.
+
+Reminder: The planning phase now includes a failure-first review step before implementation prompts are generated. Come prepared to identify assumptions, failure modes, and edge cases for each proposed step.
+
+Do not start any development work yet. Just read, verify, and confirm.
